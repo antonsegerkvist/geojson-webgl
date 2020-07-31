@@ -1,28 +1,42 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div ref="planet" class="planet">
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Vue from 'vue';
+import Planet from './library';
 
-export default {
+import Nodes from './data/nodes.json';
+import World from './data/world.json';
+
+export default Vue.extend({
   name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+
+  data() {
+    return {
+      planet: undefined,
+    };
+  },
+
+  mounted() {
+    this.planet = new Planet({
+      element: this.$refs.planet,
+      geojson: World,
+      data: Nodes,
+      zoomExtent: [2, 100],
+    });
+    this.planet.init();
+  },
+
+  beforeDestroy() {
+    this.planet.destroy();
+  },
+});
 </script>
 
 <style lang="less">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+@import "./library/style.less";
 </style>
